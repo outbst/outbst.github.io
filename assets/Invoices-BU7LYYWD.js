@@ -1,0 +1,1 @@
+import{a5 as t,l as o,m as e,t as c,v as n}from"./index-C67yNP8k.js";const a={},l={class:"w-full flex flex-col max-w-[600px]"},i={class:"flex flex-none mb-[30px]"},r={class:"text-[24px] font-medium"};function _(s,f){return n(),o("div",l,[e("div",i,[e("div",r,c(s.$t("menu.invoices")),1)])])}const x=t(a,[["render",_]]);export{x as default};
