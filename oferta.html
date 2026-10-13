@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<title>Публичная оферта — Claude Chat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0A0B14;
+    --bg-soft: #10121F;
+    --card: #151827;
+    --border: rgba(255,255,255,0.08);
+    --text: #ECEDF6;
+    --muted: #8D91AB;
+    --muted-2: #5D6180;
+    --accent: #6C5CE7;
+    --teal: #2DD4BF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:
+      radial-gradient(1100px 600px at 85% -10%, rgba(108,92,231,0.14), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--teal);}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--teal); outline-offset:3px; border-radius:6px;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+  .wrap{max-width:820px; margin:0 auto; padding:0 24px;}
+  h1,h2{font-family:'Unbounded', sans-serif; letter-spacing:-0.01em;}
+
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(10,11,20,0.72);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav{max-width:1140px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; padding:18px 24px;}
+  .logo{display:flex; align-items:center; gap:10px; font-family:'Unbounded'; font-weight:700; font-size:19px;}
+  .logo-dot{
+    width:11px; height:11px; border-radius:50%;
+    background:linear-gradient(135deg, var(--accent), var(--teal));
+    box-shadow:0 0 16px rgba(108,92,231,0.7);
+    flex-shrink:0;
+  }
+  .back{font-size:14.5px; color:var(--muted); display:flex; align-items:center; gap:6px;}
+  .back:hover{color:var(--text);}
+
+  .doc-head{padding:64px 0 32px; border-bottom:1px solid var(--border); margin-bottom:48px;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono'; font-size:12.5px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--teal); border:1px solid rgba(45,212,191,0.3); background:rgba(45,212,191,0.07);
+    padding:6px 14px; border-radius:100px; margin-bottom:20px;
+  }
+  .doc-head h1{font-size:clamp(28px, 4vw, 38px); margin-bottom:14px;}
+  .doc-head .meta{color:var(--muted); font-size:14.5px;}
+
+  main{padding-bottom:80px;}
+  .clause{margin-bottom:36px;}
+  .clause h2{
+    font-size:18px; font-weight:600; font-family:'Inter'; margin-bottom:14px;
+    display:flex; align-items:baseline; gap:12px;
+  }
+  .clause h2 .num{
+    font-family:'JetBrains Mono'; color:var(--accent); font-size:15px; font-weight:500;
+  }
+  .clause p, .clause li{color:var(--muted); font-size:15px; margin-bottom:10px;}
+  .clause ul, .clause ol{padding-left:22px; margin-bottom:10px;}
+  .clause li{margin-bottom:8px;}
+  .clause strong{color:var(--text); font-weight:600;}
+
+  .req-box{
+    background:var(--card); border:1px solid var(--border); border-radius:16px; padding:26px 28px; margin-top:16px;
+  }
+  .req-box dl{display:grid; grid-template-columns:auto 1fr; gap:8px 16px; font-size:14.5px;}
+  .req-box dt{color:var(--muted-2); white-space:nowrap;}
+  .req-box dd{color:var(--text);}
+
+  .contact-row{display:flex; gap:24px; flex-wrap:wrap; margin-top:12px;}
+  .contact-row a{font-size:14.5px; text-decoration:underline; text-underline-offset:3px;}
+
+  footer{border-top:1px solid var(--border); padding:32px 0; background:var(--bg-soft);}
+  .legal-bar{
+    max-width:1140px; margin:0 auto; padding:0 24px;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; font-size:13px; color:var(--muted-2);
+  }
+  .legal-bar a{color:var(--muted-2); text-decoration:none;}
+  .legal-bar a:hover{color:var(--teal);}
+
+  @media (max-width:560px){
+    .doc-head{padding-top:40px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <div class="logo"><span class="logo-dot"></span>Claude<span style="color:var(--muted-2); font-weight:500;"> Chat</span></div>
+    <a href="cloude.html" class="back">← На главную</a>
+  </div>
+</header>
+
+<div class="wrap doc-head">
+  <div class="eyebrow">Юридический документ</div>
+  <h1>Публичная оферта на оказание услуг подписки Claude Chat</h1>
+  <p class="meta">Редакция от 30 июля 2026 года. Настоящий документ является официальным предложением (публичной офертой) в соответствии со ст. 435 и п. 2 ст. 437 Гражданского кодекса РФ.</p>
+</div>
+
+<main class="wrap">
+
+  <div class="clause">
+    <h2><span class="num">1.</span>Общие положения</h2>
+    <p>1.1. Индивидуальный предприниматель Порфирьев Эмин Петрович (далее — «Исполнитель») предлагает любому дееспособному физическому или юридическому лицу (далее — «Пользователь») заключить договор возмездного оказания услуг доступа к сервису «Claude Chat» (далее — «Сервис») на условиях, изложенных в настоящей оферте.</p>
+    <p>1.2. Сервис представляет собой онлайн-чат, предоставляющий Пользователю доступ к нейросети Claude на условиях подписки для получения текстовых ответов на запросы Пользователя.</p>
+    <p>1.3. Оплата подписки Пользователем означает полное и безоговорочное принятие (акцепт) условий настоящей оферты в порядке п. 3 ст. 438 ГК РФ.</p>
+    <p>1.4. Исполнитель не является разработчиком нейросети Claude; Сервис предоставляет доступ к ней на основании соответствующих технических и лицензионных условий поставщика технологии.</p>
+  </div>
+
+  <div class="clause">
+    <h2><span class="num">2.</span>Предмет договора</h2>
+    <p>2.1. Исполнитель предоставляет Пользователю доступ к Сервису на условиях выбранного тарифного плана, а Пользователь обязуется оплатить услуги в размере и порядке, установленных настоящей офертой.</p>
+    <p>2.2. Действующие тарифные планы и их стоимость публикуются на странице сайта <a href="cloude.html#pricing">сайта Исполнителя</a> и могут включать следующие варианты: 300 ₽, 450 ₽, 590 ₽ и 1180 ₽ в месяц.</p>
+    <p>2.3. Состав и объём функций каждого тарифа (лимит сообщений, приоритет обработки запросов и иные параметры) указывается на странице тарифов и является неотъемлемой частью настоящей оферты.</p>
+  </div>
+
+  <div class="clause">
+    <h2><span class="num">3.</span>Порядок оплаты и предоставления доступа</h2>
+    <ol>
+      <li>3.1. Оплата производится безналичным способом через платёжную систему ЮKassa банковской картой либо иным доступным на сайте способом.</li>
+      <li>3.2. Подписка является периодической (ежемесячной) и продлевается автоматически на условиях выбранного тарифа, если Пользователь не отменил её до окончания оплаченного периода.</li>
+      <li>3.3. Доступ к Сервису предоставляется автоматически после успешного зачисления оплаты, как правило, в течение нескольких минут.</li>
+      <li>3.4. Пользователь вправе отменить продление подписки в любой момент в личном кабинете либо обратившись в поддержку Исполнителя; доступ сохраняется до окончания уже оплаченного периода.</li>
+    </ol>
+  </div>
+
+  <div class="clause">
+    <h2><span class="num">4.</span>Права и обязанности сторон</h2>
+    <p><strong>Исполнитель обязуется:</strong></p>
+    <ul>
+      <li>предоставить Пользователю доступ к Сервису в объёме оплаченного тарифа;</li>
+      <li>обеспечивать техническую доступность Сервиса, за исключением периодов проведения регламентных работ;</li>
+      <li>консультировать Пользователя по вопросам оплаты и работы Сервиса через указанные контакты.</li>
+    </ul>
+    <p><strong>Пользователь обязуется:</strong></p>
+    <ul>
+      <li>предоставлять достоверные данные, необходимые для оплаты и доступа к Сервису;</li>
+      <li>не использовать Сервис для действий, противоречащих законодательству РФ;</li>
+      <li>своевременно оплачивать выбранный тарифный план.</li>
+    </ul>
+  </div>
+
+  <div class="clause">
+    <h2><span class="num">5.</span>Стоимость услуг и порядок расчётов</h2>
+    <p>5.1. Стоимость подписки определяется выбранным тарифом и указывается на сайте на момент оплаты в рублях РФ.</p>
+    <p>5.2. Исполнитель вправе изменять стоимость тарифов; изменение стоимости не распространяется на уже оплаченный период подписки Пользователя.</p>
+    <p>5.3. Все расчёты по договору производятся в безналичном порядке через платёжную систему ЮKassa.</p>
+  </div>
+
+  <div class="clause">
+    <h2><span class="num">6.</span>Возврат денежных средств</h2>
+    <p>6.1. Пользователь вправе обратиться за возвратом денежных средств за неиспользованный период подписки, направив запрос по контактам, указанным в разделе 9 настоящей оферты.</p>
+    <p>6.2. Возврат производится на основании письменного обращения Пользователя в срок, установленный законодательством РФ о защите прав потребителей, тем же способом, которым была произведена оплата.</p>
+  </div>
+
+  <div class="clause">
+    <h2><span class="num">7.</span>Ответственность сторон</h2>
+    <p>7.1. Стороны несут ответственность за неисполнение или ненадлежащее исполнение своих обязательств по договору в соответствии с действующим законодательством РФ.</p>
+    <p>7.2. Исполнитель не несёт ответственности за содержание ответов, сгенерированных нейросетью Claude, и рекомендует Пользователю самостоятельно проверять важную для него информацию.</p>
+    <p>7.3. Исполнитель не несёт ответственности за временную недоступность Сервиса, вызванную обстоятельствами, находящимися вне его разумного контроля, включая сбои на стороне поставщика технологии или платёжной системы.</p>
+  </div>
+
+  <div class="clause">
+    <h2><span class="num">8.</span>Срок действия и изменение оферты</h2>
+    <p>8.1. Оферта вступает в силу с момента размещения на сайте Исполнителя и действует до момента её отзыва Исполнителем.</p>
+    <p>8.2. Исполнитель вправе вносить изменения в условия оферты в одностороннем порядке с публикацией новой редакции на сайте. Продолжение использования Сервиса после внесения изменений означает согласие Пользователя с новыми условиями.</p>
+  </div>
+
+  <div class="clause">
+    <h2><span class="num">9.</span>Реквизиты и контакты Исполнителя</h2>
+    <p>По всем вопросам, связанным с оплатой, работой Сервиса или настоящей офертой, Пользователь может обратиться по указанным ниже контактам:</p>
+    <div class="contact-row">
+      <a href="mailto:zap800@mail.ru">zap800@mail.ru</a>
+      <a href="tel:+79196465930">+7 (919) 646-59-30</a>
+    </div>
+
+    <div class="req-box">
+      <dl>
+        <dt>ИП:</dt><dd>Индивидуальный предприниматель Порфирьев Эмин Петрович</dd>
+        <dt>Юр. адрес:</dt><dd>420033, Россия, Респ. Татарстан, г. Казань, ул. Болотникова, д. 3, кв. 14</dd>
+        <dt>ИНН:</dt><dd class="mono">165607617676</dd>
+        <dt>ОГРНИП:</dt><dd class="mono">317169000089403</dd>
+        <dt>Расчётный счёт:</dt><dd class="mono">40802810200000163368</dd>
+        <dt>Банк:</dt><dd>АО «ТБанк»</dd>
+        <dt>ИНН банка:</dt><dd class="mono">7710140679</dd>
+        <dt>БИК банка:</dt><dd class="mono">044525974</dd>
+        <dt>Корр. счёт банка:</dt><dd class="mono">30101810145250000974</dd>
+        <dt>Юр. адрес банка:</dt><dd>127287, г. Москва, ул. Хуторская 2-я, д. 38А, стр. 26</dd>
+      </dl>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="legal-bar">
+    <div>© 2026 ИП Порфирьев Э. П. Все права защищены.</div>
+    <div><a href="cloude.html">Claude Chat — на главную</a></div>
+  </div>
+</footer>
+
+</body>
+</html>

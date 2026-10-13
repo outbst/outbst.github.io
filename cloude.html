@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<title>Claude Chat — онлайн-чат с нейросетью Claude по подписке</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0A0B14;
+    --bg-soft: #10121F;
+    --card: #151827;
+    --card-hover: #1A1E30;
+    --border: rgba(255,255,255,0.08);
+    --text: #ECEDF6;
+    --muted: #8D91AB;
+    --muted-2: #5D6180;
+    --accent: #6C5CE7;
+    --accent-soft: #8B7CF0;
+    --teal: #2DD4BF;
+    --radius: 18px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:
+      radial-gradient(1100px 600px at 85% -10%, rgba(108,92,231,0.20), transparent 60%),
+      radial-gradient(900px 500px at -10% 20%, rgba(45,212,191,0.10), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit; text-decoration:none;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+  .wrap{max-width:1140px; margin:0 auto; padding:0 24px;}
+  h1,h2,h3{font-family:'Unbounded', sans-serif; letter-spacing:-0.01em;}
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible{outline:2px solid var(--teal); outline-offset:3px; border-radius:6px;}
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(10,11,20,0.72);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav{display:flex; align-items:center; justify-content:space-between; padding:18px 24px;}
+  .logo{display:flex; align-items:center; gap:10px; font-family:'Unbounded'; font-weight:700; font-size:19px;}
+  .logo-dot{
+    width:11px; height:11px; border-radius:50%;
+    background:linear-gradient(135deg, var(--accent), var(--teal));
+    box-shadow:0 0 16px rgba(108,92,231,0.7);
+    flex-shrink:0;
+  }
+  .nav-links{display:flex; gap:32px; font-size:15px; color:var(--muted);}
+  .nav-links a:hover{color:var(--text);}
+  .nav-cta{
+    background:var(--text); color:var(--bg); padding:10px 20px; border-radius:100px;
+    font-weight:600; font-size:14px; white-space:nowrap;
+  }
+  .nav-cta:hover{background:var(--teal);}
+  .burger{display:none;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:88px 0 60px;
+    display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono'; font-size:12.5px; letter-spacing:0.06em; text-transform:uppercase;
+    color:var(--teal); border:1px solid rgba(45,212,191,0.3); background:rgba(45,212,191,0.07);
+    padding:6px 14px; border-radius:100px; margin-bottom:24px;
+  }
+  .hero h1{
+    font-size:clamp(34px, 4.4vw, 52px); font-weight:700; line-height:1.08; margin-bottom:22px;
+  }
+  .hero h1 .grad{
+    background:linear-gradient(100deg, var(--accent-soft), var(--teal));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .hero p.lead{color:var(--muted); font-size:18px; max-width:520px; margin-bottom:34px;}
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap; align-items:center;}
+  .btn-primary{
+    background:linear-gradient(100deg, var(--accent), #8B7CF0);
+    color:#fff; padding:15px 28px; border-radius:100px; font-weight:600; font-size:15.5px;
+    box-shadow:0 8px 30px rgba(108,92,231,0.35);
+    border:none; cursor:pointer; display:inline-block;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .btn-primary:hover{transform:translateY(-2px); box-shadow:0 12px 34px rgba(108,92,231,0.5);}
+  .btn-ghost{
+    color:var(--text); padding:15px 24px; border-radius:100px; font-weight:600; font-size:15.5px;
+    border:1px solid var(--border);
+  }
+  .btn-ghost:hover{border-color:var(--muted-2);}
+  .hero-note{margin-top:18px; font-size:13.5px; color:var(--muted-2);}
+
+  /* ---------- CHAT MOCKUP (signature element) ---------- */
+  .chat-mock{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:0; overflow:hidden;
+    box-shadow:0 30px 70px -20px rgba(0,0,0,0.6);
+  }
+  .chat-bar{
+    display:flex; align-items:center; gap:8px; padding:14px 18px;
+    border-bottom:1px solid var(--border); background:rgba(255,255,255,0.02);
+  }
+  .chat-bar .dots{display:flex; gap:6px;}
+  .chat-bar .dots span{width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,0.14);}
+  .chat-bar .title{margin-left:10px; font-size:13px; color:var(--muted); font-family:'JetBrains Mono';}
+  .chat-body{padding:22px; display:flex; flex-direction:column; gap:14px;}
+  .bubble{max-width:82%; padding:12px 16px; border-radius:16px; font-size:14.5px;}
+  .bubble.user{
+    align-self:flex-end; background:linear-gradient(100deg, var(--accent), #7C6DEF); color:#fff;
+    border-bottom-right-radius:4px;
+  }
+  .bubble.ai{
+    align-self:flex-start; background:var(--bg-soft); border:1px solid var(--border); color:var(--text);
+    border-bottom-left-radius:4px;
+  }
+  .typing{display:flex; gap:5px; align-self:flex-start; background:var(--bg-soft); border:1px solid var(--border);
+    padding:14px 18px; border-radius:16px; border-bottom-left-radius:4px;}
+  .typing span{width:7px; height:7px; border-radius:50%; background:var(--muted); animation:blink 1.3s infinite ease-in-out;}
+  .typing span:nth-child(2){animation-delay:.18s;}
+  .typing span:nth-child(3){animation-delay:.36s;}
+  @keyframes blink{0%,80%,100%{opacity:.25; transform:translateY(0);} 40%{opacity:1; transform:translateY(-3px);}}
+  .chat-input{
+    display:flex; align-items:center; gap:10px; margin:0 22px 22px; padding:12px 16px;
+    border:1px solid var(--border); border-radius:100px; color:var(--muted-2); font-size:14px;
+  }
+  .chat-input .send{
+    margin-left:auto; width:30px; height:30px; border-radius:50%;
+    background:linear-gradient(135deg, var(--accent), var(--teal)); flex-shrink:0;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .typing span{animation:none; opacity:.6;}
+  }
+
+  /* ---------- SECTIONS ---------- */
+  section{padding:70px 0;}
+  .section-head{max-width:640px; margin:0 auto 48px; text-align:center;}
+  .section-head .eyebrow{margin-bottom:16px;}
+  .section-head h2{font-size:clamp(26px, 3.2vw, 36px); margin-bottom:14px;}
+  .section-head p{color:var(--muted); font-size:16.5px;}
+
+  /* features */
+  .features{display:grid; grid-template-columns:repeat(3, 1fr); gap:22px;}
+  .feature{
+    background:var(--card); border:1px solid var(--border); border-radius:16px; padding:28px;
+  }
+  .feature .icon{
+    width:42px; height:42px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+    background:rgba(108,92,231,0.12); border:1px solid rgba(108,92,231,0.25); margin-bottom:18px;
+  }
+  .feature h3{font-size:17px; font-weight:600; margin-bottom:8px; font-family:'Inter';}
+  .feature p{color:var(--muted); font-size:14.5px;}
+
+  /* pricing */
+  .price-grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:18px;}
+  .plan{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:30px 24px; display:flex; flex-direction:column; position:relative;
+    transition:transform .18s ease, border-color .18s ease;
+  }
+  .plan:hover{transform:translateY(-4px); border-color:rgba(108,92,231,0.4);}
+  .plan.featured{border-color:var(--accent); background:linear-gradient(180deg, rgba(108,92,231,0.10), var(--card) 40%);}
+  .plan .tag{
+    position:absolute; top:-12px; right:20px; background:linear-gradient(100deg, var(--accent), var(--teal));
+    color:#fff; font-size:11.5px; font-weight:700; padding:5px 12px; border-radius:100px; letter-spacing:.02em;
+  }
+  .plan .name{font-family:'JetBrains Mono'; font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-bottom:14px;}
+  .plan .price{font-family:'Unbounded'; font-size:34px; font-weight:700; margin-bottom:2px;}
+  .plan .price span{font-family:'Inter'; font-size:14px; color:var(--muted); font-weight:500;}
+  .plan .desc{color:var(--muted); font-size:13.5px; margin-bottom:22px; min-height:36px;}
+  .plan ul{list-style:none; display:flex; flex-direction:column; gap:11px; margin-bottom:26px; flex:1;}
+  .plan li{font-size:14px; display:flex; gap:10px; align-items:flex-start;}
+  .plan li svg{flex-shrink:0; margin-top:2px;}
+  .plan .buy{
+    text-align:center; padding:12px; border-radius:100px; font-weight:600; font-size:14.5px;
+    border:1px solid var(--border); color:var(--text);
+  }
+  .plan.featured .buy{background:linear-gradient(100deg, var(--accent), #8B7CF0); border:none; color:#fff;}
+  .plan .buy:hover{border-color:var(--muted-2);}
+
+  .price-note{text-align:center; color:var(--muted-2); font-size:13.5px; margin-top:26px;}
+  .price-note a{color:var(--teal); text-decoration:underline; text-underline-offset:3px;}
+
+  /* faq */
+  .faq{max-width:760px; margin:0 auto; display:flex; flex-direction:column; gap:1px; border:1px solid var(--border); border-radius:16px; overflow:hidden;}
+  .faq-item{background:var(--card); padding:22px 26px;}
+  .faq-item + .faq-item{border-top:1px solid var(--border);}
+  .faq-item h3{font-size:15.5px; font-weight:600; margin-bottom:8px; font-family:'Inter';}
+  .faq-item p{color:var(--muted); font-size:14.5px;}
+
+  /* CTA band */
+  .cta-band{
+    background:var(--card); border:1px solid var(--border); border-radius:24px; padding:56px 40px;
+    text-align:center; position:relative; overflow:hidden;
+  }
+  .cta-band::before{
+    content:''; position:absolute; inset:0;
+    background:radial-gradient(500px 220px at 50% 0%, rgba(108,92,231,0.25), transparent 70%);
+  }
+  .cta-band h2{position:relative; font-size:clamp(24px,3vw,32px); margin-bottom:14px;}
+  .cta-band p{position:relative; color:var(--muted); margin-bottom:28px;}
+  .cta-band .btn-primary{position:relative;}
+
+  /* ---------- FOOTER ---------- */
+  footer{border-top:1px solid var(--border); padding:56px 0 30px; background:var(--bg-soft);}
+  .footer-grid{display:grid; grid-template-columns:1.3fr 1fr 1.4fr; gap:40px; margin-bottom:40px;}
+  .footer-col h4{font-family:'JetBrains Mono'; font-size:12.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted-2); margin-bottom:16px;}
+  .footer-col p, .footer-col a{font-size:14.5px; color:var(--muted); display:block; margin-bottom:10px;}
+  .footer-col a:hover{color:var(--teal);}
+  .footer-logo{display:flex; align-items:center; gap:10px; font-family:'Unbounded'; font-weight:700; font-size:17px; margin-bottom:14px;}
+  .footer-desc{color:var(--muted-2); font-size:13.5px; max-width:320px;}
+
+  .requisites{
+    border:1px solid var(--border); border-radius:14px; padding:22px 24px; background:var(--card);
+  }
+  .requisites dl{display:grid; grid-template-columns:auto 1fr; gap:6px 14px; font-size:13.3px;}
+  .requisites dt{color:var(--muted-2); white-space:nowrap;}
+  .requisites dd{color:var(--muted);}
+
+  .legal-bar{
+    border-top:1px solid var(--border); padding-top:24px; display:flex; justify-content:space-between;
+    flex-wrap:wrap; gap:14px; font-size:13px; color:var(--muted-2);
+  }
+  .legal-bar .links{display:flex; gap:22px; flex-wrap:wrap;}
+  .legal-bar a:hover{color:var(--teal);}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 920px){
+    .hero{grid-template-columns:1fr; padding-top:56px;}
+    .features{grid-template-columns:1fr 1fr;}
+    .price-grid{grid-template-columns:1fr 1fr;}
+    .footer-grid{grid-template-columns:1fr; gap:30px;}
+    .nav-links{display:none;}
+  }
+  @media (max-width: 560px){
+    .features{grid-template-columns:1fr;}
+    .price-grid{grid-template-columns:1fr;}
+    .hero-actions{flex-direction:column; align-items:stretch;}
+    .btn-primary, .btn-ghost{text-align:center;}
+    .legal-bar{flex-direction:column; align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="logo"><span class="logo-dot"></span>Claude<span style="color:var(--muted-2); font-weight:500;"> Chat</span></div>
+    <nav class="nav-links">
+      <a href="#features">Возможности</a>
+      <a href="#pricing">Тарифы</a>
+      <a href="#faq">Вопросы</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+    <a href="#pricing" class="nav-cta">Выбрать тариф</a>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero wrap">
+    <div>
+      <div class="eyebrow">Работает на нейросети Claude</div>
+      <h1>Разговор с ИИ,<br>который <span class="grad">действительно помогает</span></h1>
+      <p class="lead">«Claude Chat» — онлайн-чат с нейросетью Claude по подписке. Пишите с телефона или компьютера: объяснения, тексты, код, разбор документов и повседневные вопросы — без установки приложений.</p>
+      <div class="hero-actions">
+        <a href="#pricing" class="btn-primary">Посмотреть тарифы</a>
+        <a href="#faq" class="btn-ghost">Как это работает</a>
+      </div>
+      <p class="hero-note">Оплата через ЮKassa · отмена подписки в любой момент</p>
+    </div>
+
+    <div class="chat-mock" role="img" aria-label="Пример переписки с ИИ-собеседником">
+      <div class="chat-bar">
+        <div class="dots"><span></span><span></span><span></span></div>
+        <div class="title">chat.claudechat.ru</div>
+      </div>
+      <div class="chat-body">
+        <div class="bubble user">Помоги коротко объяснить клиенту, зачем нужна подписка на чат с ИИ</div>
+        <div class="bubble ai">Это доступ к нейросети Claude в браузере: быстрые ответы, помощь с текстами и кодом, без лимитов на количество диалогов в рамках тарифа.</div>
+        <div class="bubble user">А если нужно разобрать большой документ?</div>
+        <div class="typing"><span></span><span></span><span></span></div>
+      </div>
+      <div class="chat-input">Спросите что угодно…<div class="send"></div></div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features" class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Почему «Claude Chat»</div>
+      <h2>Один чат для рабочих и личных задач</h2>
+      <p>Понятная подписка вместо разовых оплат за токены — фиксированная стоимость в месяц.</p>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <div class="icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h10" stroke="#8B7CF0" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Тексты и переводы</h3>
+        <p>Письма, посты, описания товаров, переводы и редактура — с учётом тона и аудитории.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" stroke="#8B7CF0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Код и отладка</h3>
+        <p>Объяснение ошибок, генерация кода, помощь с документацией на разных языках программирования.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16" stroke="#8B7CF0" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Разбор документов</h3>
+        <p>Кратко изложить суть длинного файла, найти ключевые пункты, подготовить выжимку.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="#8B7CF0" stroke-width="2"/><path d="M12 8v4l3 2" stroke="#8B7CF0" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Доступ 24/7</h3>
+        <p>Чат открыт в браузере на любом устройстве — без очередей и ограничений по времени суток.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="#8B7CF0" stroke-width="2"/></svg>
+        </div>
+        <h3>История диалогов</h3>
+        <p>Все переписки сохраняются в личном кабинете — можно вернуться к диалогу в любой момент.</p>
+      </div>
+      <div class="feature">
+        <div class="icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6z" stroke="#8B7CF0" stroke-width="2" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Гибкие тарифы</h3>
+        <p>От разового доступа до расширенного тарифа для активной ежедневной работы.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="wrap" style="margin-top:64px;">
+    <div class="section-head">
+      <div class="eyebrow">Тарифы</div>
+      <h2>Выберите подписку</h2>
+      <p>Оплата ежемесячная, продлевается автоматически. Отменить можно в любой момент в личном кабинете.</p>
+    </div>
+
+    <div class="price-grid">
+      <div class="plan">
+        <div class="name">Старт</div>
+        <div class="price">300 ₽<span>/ мес</span></div>
+        <div class="desc">Познакомиться с чатом и попробовать возможности ИИ.</div>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Доступ к чату с ИИ</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Базовый лимит сообщений в день</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>История переписки</li>
+        </ul>
+        <a href="#contacts" class="buy">Выбрать</a>
+      </div>
+
+      <div class="plan">
+        <div class="name">Базовый</div>
+        <div class="price">450 ₽<span>/ мес</span></div>
+        <div class="desc">Для регулярных личных задач и переписки с ИИ.</div>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Всё из тарифа «Старт»</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Увеличенный лимит сообщений</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Приоритет в очереди ответов</li>
+        </ul>
+        <a href="#contacts" class="buy">Выбрать</a>
+      </div>
+
+      <div class="plan featured">
+        <div class="tag">Популярный</div>
+        <div class="name">Про</div>
+        <div class="price">590 ₽<span>/ мес</span></div>
+        <div class="desc">Для ежедневной работы: тексты, код, документы.</div>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Всё из тарифа «Базовый»</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Расширенный лимит сообщений</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Разбор файлов и документов</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Поддержка в чате</li>
+        </ul>
+        <a href="#contacts" class="buy">Выбрать</a>
+      </div>
+
+      <div class="plan">
+        <div class="name">Безлимит</div>
+        <div class="price">1180 ₽<span>/ мес</span></div>
+        <div class="desc">Максимум возможностей без ограничений по нагрузке.</div>
+        <ul>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Всё из тарифа «Про»</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Без дневных лимитов сообщений</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Максимальный приоритет ответов</li>
+          <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#2DD4BF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Приоритетная поддержка</li>
+        </ul>
+        <a href="#contacts" class="buy">Выбрать</a>
+      </div>
+    </div>
+    <p class="price-note">Оплачивая подписку, вы принимаете условия <a href="oferta.html">Публичной оферты</a>.</p>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="wrap" style="margin-top:64px;">
+    <div class="section-head">
+      <div class="eyebrow">Вопросы и ответы</div>
+      <h2>Коротко о подписке</h2>
+    </div>
+    <div class="faq">
+      <div class="faq-item">
+        <h3>Как оформляется оплата?</h3>
+        <p>Оплата проходит через платёжную систему ЮKassa банковской картой. После оплаты доступ к чату открывается автоматически.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Можно ли отменить подписку?</h3>
+        <p>Да, отменить продление можно в любой момент в личном кабинете или написав в поддержку — доступ сохранится до конца оплаченного периода.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Чем отличаются тарифы?</h3>
+        <p>Тарифы отличаются суточным лимитом сообщений и приоритетом обработки запросов — от разового знакомства до ежедневной интенсивной работы.</p>
+      </div>
+      <div class="faq-item">
+        <h3>Куда обращаться по вопросам оплаты?</h3>
+        <p>Свяжитесь с нами по почте или телефону, указанным в разделе «Контакты» ниже.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="wrap" style="margin-top:64px;">
+    <div class="cta-band">
+      <h2>Начните диалог с ИИ прямо сейчас</h2>
+      <p>Выберите тариф — и получите доступ к чату сразу после оплаты.</p>
+      <a href="#pricing" class="btn-primary">Выбрать тариф</a>
+    </div>
+  </section>
+</main>
+
+<footer id="contacts" style="margin-top:64px;">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo"><span class="logo-dot"></span>Claude Chat</div>
+        <p class="footer-desc">Онлайн-чат с нейросетью Claude по подписке. Сервис работает в браузере, без установки приложений.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Контакты</h4>
+        <a href="mailto:zap800@mail.ru">zap800@mail.ru</a>
+        <a href="tel:+79196465930">+7 (919) 646-59-30</a>
+        <a href="oferta.html">Публичная оферта</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Реквизиты</h4>
+        <div class="requisites">
+          <dl>
+            <dt>ИП:</dt><dd>Порфирьев Эмин Петрович</dd>
+            <dt>Адрес:</dt><dd>420033, Респ. Татарстан, г. Казань, ул. Болотникова, д. 3, кв. 14</dd>
+            <dt>ИНН:</dt><dd class="mono">165607617676</dd>
+            <dt>ОГРНИП:</dt><dd class="mono">317169000089403</dd>
+            <dt>Р/с:</dt><dd class="mono">40802810200000163368</dd>
+            <dt>Банк:</dt><dd>АО «ТБанк»</dd>
+            <dt>ИНН банка:</dt><dd class="mono">7710140679</dd>
+            <dt>БИК банка:</dt><dd class="mono">044525974</dd>
+            <dt>К/с банка:</dt><dd class="mono">30101810145250000974</dd>
+            <dt>Адрес банка:</dt><dd>127287, г. Москва, ул. Хуторская 2-я, д. 38А, стр. 26</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <div class="legal-bar">
+      <div>© 2026 ИП Порфирьев Э. П. Все права защищены.</div>
+      <div class="links">
+        <a href="oferta.html">Публичная оферта</a>
+        <a href="#contacts">Контакты</a>
+        <a href="mailto:zap800@mail.ru">Написать на почту</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
